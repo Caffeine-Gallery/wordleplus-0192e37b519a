@@ -7,6 +7,7 @@ import Option "mo:base/Option";
 import Random "mo:base/Random";
 import Text "mo:base/Text";
 import Char "mo:base/Char";
+import Debug "mo:base/Debug";
 
 actor {
   // Word list
@@ -20,12 +21,16 @@ actor {
     "BOOST", "BOOTH", "BOUND", "BRAIN", "BRAND", "BREAD", "BREAK", "BREED", "BRIEF"
   ];
 
+  stable var currentWord : Text = "";
+
   // Function to get a random word
   public func getRandomWord() : async Text {
     let randomBytes = await Random.blob();
     let randomNumber = Random.rangeFrom(32, randomBytes);
     let index = randomNumber % WORDS.size();
-    WORDS[index]
+    currentWord := WORDS[index];
+    Debug.print("New word set: " # currentWord);
+    currentWord
   };
 
   // Function to check if a word is valid
@@ -34,9 +39,10 @@ actor {
   };
 
   // Function to evaluate a guess
-  public func evaluateGuess(guess : Text, target : Text) : async [Text] {
-    let guessChars = Iter.toArray(Text.toIter(guess));
-    let targetChars = Iter.toArray(Text.toIter(target));
+  public func evaluateGuess(guess : Text) : async [Text] {
+    Debug.print("Evaluating guess: " # guess # " against word: " # currentWord);
+    let guessChars = Iter.toArray(Text.toIter(Text.toUppercase(guess)));
+    let targetChars = Iter.toArray(Text.toIter(currentWord));
     
     let result = Array.init<Text>(5, "absent");
     var mutableTargetChars = Array.thaw<Char>(targetChars);
@@ -62,6 +68,7 @@ actor {
       };
     };
 
+    Debug.print("Evaluation result: " # debug_show(Iter.toArray(result.vals())));
     Iter.toArray(result.vals())
   };
 };

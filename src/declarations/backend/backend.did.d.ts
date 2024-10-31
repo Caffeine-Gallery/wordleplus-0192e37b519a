@@ -3,7 +3,7 @@ import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
 export interface _SERVICE {
-  'evaluateGuess' : ActorMethod<[string, string], Array<string>>,
+  'evaluateGuess' : ActorMethod<[string], Array<string>>,
   'getRandomWord' : ActorMethod<[], string>,
   'isValidWord' : ActorMethod<[string], boolean>,
 }

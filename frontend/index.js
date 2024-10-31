@@ -27,12 +27,18 @@ let stats = JSON.parse(localStorage.getItem('wordleStats')) || {
 
 // Initialize game
 async function initGame() {
-    state.targetWord = await backend.getRandomWord();
-    createBoard();
-    createKeyboard();
-    setupEventListeners();
-    loadStats();
-    applyTheme();
+    try {
+        state.targetWord = await backend.getRandomWord();
+        console.log("New game started with word:", state.targetWord);
+        createBoard();
+        createKeyboard();
+        setupEventListeners();
+        loadStats();
+        applyTheme();
+    } catch (error) {
+        console.error("Error initializing game:", error);
+        showToast("Error starting game. Please try again.");
+    }
 }
 
 // Create game board
@@ -106,32 +112,38 @@ function updateBoard() {
 async function submitGuess() {
     const guess = state.boardState[state.currentRow].join('');
     
-    const isValidWord = await backend.isValidWord(guess);
-    if (!isValidWord) {
-        showToast("Not in word list");
-        shakeRow(state.currentRow);
-        return;
-    }
+    try {
+        const isValidWord = await backend.isValidWord(guess);
+        if (!isValidWord) {
+            showToast("Not in word list");
+            shakeRow(state.currentRow);
+            return;
+        }
 
-    const result = await backend.evaluateGuess(guess);
-    animateReveal(state.currentRow, result);
+        const result = await backend.evaluateGuess(guess);
+        console.log("Guess evaluation result:", result);
+        animateReveal(state.currentRow, result);
 
-    if (guess === state.targetWord) {
-        setTimeout(() => {
-            state.gameStatus = 'WIN';
-            showToast(['Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Phew!'][state.currentRow]);
-            updateStats(true);
-            celebrateWin();
-        }, 1500);
-    } else if (state.currentRow === 5) {
-        setTimeout(() => {
-            state.gameStatus = 'LOSE';
-            showToast(state.targetWord);
-            updateStats(false);
-        }, 1500);
-    } else {
-        state.currentRow++;
-        state.currentTile = 0;
+        if (guess === state.targetWord) {
+            setTimeout(() => {
+                state.gameStatus = 'WIN';
+                showToast(['Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Phew!'][state.currentRow]);
+                updateStats(true);
+                celebrateWin();
+            }, 1500);
+        } else if (state.currentRow === 5) {
+            setTimeout(() => {
+                state.gameStatus = 'LOSE';
+                showToast(state.targetWord);
+                updateStats(false);
+            }, 1500);
+        } else {
+            state.currentRow++;
+            state.currentTile = 0;
+        }
+    } catch (error) {
+        console.error("Error submitting guess:", error);
+        showToast("Error submitting guess. Please try again.");
     }
 }
 
@@ -153,6 +165,7 @@ function animateReveal(row, result) {
             
             tile.classList.add('flip-in');
             setTimeout(() => {
+                tile.classList.remove('correct', 'present', 'absent');
                 tile.classList.add(type);
                 updateKeyboardColors(letter, type);
                 tile.classList.remove('flip-in');
