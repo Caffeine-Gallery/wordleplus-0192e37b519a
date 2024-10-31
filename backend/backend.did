@@ -1,0 +1,5 @@
+service : {
+  evaluateGuess: (text, text) -> (vec text);
+  getRandomWord: () -> (text);
+  isValidWord: (text) -> (bool);
+}

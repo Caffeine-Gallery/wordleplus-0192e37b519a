@@ -1,0 +1,277 @@
+:root {
+    --correct-color: #6aaa64;
+    --present-color: #c9b458;
+    --absent-color: #787c7e;
+    --key-bg: #d3d6da;
+    --border-color: #d3d6da;
+    --text-color: #1a1a1b;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+    transition: background-color 0.3s ease;
+}
+
+body.dark-theme {
+    background-color: #121213;
+    color: white;
+}
+
+.game-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.title-bar {
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.tile {
+    width: 62px;
+    height: 62px;
+    border: 2px solid var(--border-color);
+    margin: 2px;
+    font-size: 2rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    transition: transform 0.15s ease-out;
+    background: transparent;
+    color: var(--text-color);
+}
+
+.dark-theme .tile {
+    border-color: #3a3a3c;
+    color: white;
+}
+
+.tile.filled {
+    border-color: #878a8c;
+}
+
+.tile.pop {
+    transform: scale(1.1);
+}
+
+.tile.flip-in {
+    transform: rotateX(90deg);
+    transition: transform 0.15s ease-in;
+}
+
+.tile.flip-out {
+    transform: rotateX(0deg);
+    transition: transform 0.15s ease-out;
+}
+
+.tile.correct {
+    background-color: var(--correct-color);
+    border-color: var(--correct-color);
+    color: white;
+}
+
+.tile.present {
+    background-color: var(--present-color);
+    border-color: var(--present-color);
+    color: white;
+}
+
+.tile.absent {
+    background-color: var(--absent-color);
+    border-color: var(--absent-color);
+    color: white;
+}
+
+.keyboard {
+    margin-top: 2rem;
+    user-select: none;
+}
+
+.key {
+    min-width: 43px;
+    height: 58px;
+    margin: 3px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--key-bg);
+    color: var(--text-color);
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.dark-theme .key {
+    background-color: #818384;
+    color: white;
+}
+
+.key:hover {
+    filter: brightness(0.9);
+}
+
+.key:active {
+    transform: scale(0.95);
+}
+
+.key.wide {
+    min-width: 65px;
+    font-size: 0.8rem;
+}
+
+.key.correct {
+    background-color: var(--correct-color);
+    color: white;
+}
+
+.key.present {
+    background-color: var(--present-color);
+    color: white;
+}
+
+.key.absent {
+    background-color: var(--absent-color);
+    color: white;
+}
+
+.toast {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.visible {
+    opacity: 1;
+}
+
+.modal-content {
+    position: relative;
+    background-color: white;
+    margin: 15% auto;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.dark-theme .modal-content {
+    background-color: #121213;
+    color: white;
+}
+
+.modal.visible .modal-content {
+    transform: translateY(0);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.stats-box {
+    text-align: center;
+    padding: 1rem;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.dark-theme .stats-box {
+    background-color: #3a3a3c;
+}
+
+.stats-box:hover {
+    transform: scale(1.05);
+}
+
+.win-animation {
+    animation: rainbow 1s linear infinite;
+}
+
+@keyframes rainbow {
+    0% { border-color: #ff0000; }
+    17% { border-color: #ff8000; }
+    33% { border-color: #ffff00; }
+    50% { border-color: #00ff00; }
+    67% { border-color: #0000ff; }
+    83% { border-color: #8000ff; }
+    100% { border-color: #ff0000; }
+}
+
+@media (max-width: 500px) {
+    .tile {
+        width: 54px;
+        height: 54px;
+        font-size: 1.8rem;
+    }
+
+    .key {
+        min-width: 32px;
+        height: 48px;
+        font-size: 0.9rem;
+    }
+
+    .key.wide {
+        min-width: 48px;
+    }
+}
+
+.distribution-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.distribution-bar span:first-child {
+    width: 20px;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.distribution-bar span:nth-child(2) {
+    width: 30px;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.distribution-bar div {
+    height: 20px;
+    background-color: #538d4e;
+    transition: width 0.5s ease-in-out;
+}

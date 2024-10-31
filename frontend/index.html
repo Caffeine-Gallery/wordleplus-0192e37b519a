@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deluxe Wordle</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="toast" class="toast"></div>
+
+    <div class="game-container p-4">
+        <div class="title-bar flex justify-between items-center">
+            <button id="helpBtn" class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+            <h1 class="text-3xl font-bold">WORDLE</h1>
+            <div class="flex space-x-2">
+                <button id="statsBtn" class="p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20V10"></path>
+                        <path d="M18 20V4"></path>
+                        <path d="M6 20v-4"></path>
+                    </svg>
+                </button>
+                <button id="themeBtn" class="p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="game-board" class="grid grid-cols-5 gap-1 max-w-md mx-auto mb-8">
+        </div>
+
+        <div id="keyboard" class="keyboard">
+            <div class="flex justify-center mb-2"></div>
+            <div class="flex justify-center mb-2"></div>
+            <div class="flex justify-center"></div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="statsModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold mb-4">Statistics</h2>
+            <div class="stats-grid">
+                <div class="stats-box">
+                    <div class="text-2xl font-bold" id="gamesPlayed">0</div>
+                    <div class="text-sm">Played</div>
+                </div>
+                <div class="stats-box">
+                    <div class="text-2xl font-bold" id="winPercentage">0</div>
+                    <div class="text-sm">Win %</div>
+                </div>
+                <div class="stats-box">
+                    <div class="text-2xl font-bold" id="currentStreak">0</div>
+                    <div class="text-sm">Streak</div>
+                </div>
+                <div class="stats-box">
+                    <div class="text-2xl font-bold" id="maxStreak">0</div>
+                    <div class="text-sm">Best</div>
+                </div>
+            </div>
+            <div class="distribution" id="guessDistribution">
+            </div>
+            <div class="mt-4 flex justify-between">
+                <button class="share-btn bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Share
+                </button>
+                <button class="close-modal bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold mb-4">How to Play</h2>
+            <p class="mb-4">Guess the WORDLE in 6 tries.</p>
+            <ul class="list-disc pl-5 mb-4">
+                <li>Each guess must be a valid 5-letter word</li>
+                <li>The color of the tiles will change to show how close your guess was:</li>
+            </ul>
+            <div class="examples space-y-4 mb-6">
+                <div>
+                    <div class="flex space-x-1 mb-2">
+                        <div class="tile correct">W</div>
+                        <div class="tile">E</div>
+                        <div class="tile">A</div>
+                        <div class="tile">R</div>
+                        <div class="tile">Y</div>
+                    </div>
+                    <p>W is in the word and in the correct spot.</p>
+                </div>
+                <div>
+                    <div class="flex space-x-1 mb-2">
+                        <div class="tile">P</div>
+                        <div class="tile present">I</div>
+                        <div class="tile">L</div>
+                        <div class="tile">O</div>
+                        <div class="tile">T</div>
+                    </div>
+                    <p>I is in the word but in the wrong spot.</p>
+                </div>
+                <div>
+                    <div class="flex space-x-1 mb-2">
+                        <div class="tile">V</div>
+                        <div class="tile">A</div>
+                        <div class="tile absent">G</div>
+                        <div class="tile">U</div>
+                        <div class="tile">E</div>
+                    </div>
+                    <p>G is not in the word in any spot.</p>
+                </div>
+            </div>
+            <button class="close-modal bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                Got it!
+            </button>
+        </div>
+    </div>
+
+    <script type="module" src="index.js"></script>
+</body>
+</html>
