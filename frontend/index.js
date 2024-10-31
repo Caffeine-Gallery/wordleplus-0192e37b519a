@@ -25,7 +25,16 @@ let stats = JSON.parse(localStorage.getItem('wordleStats')) || {
     lastPlayDate: null
 };
 
+function showLoader() {
+    document.getElementById('loader').style.display = 'block';
+}
+
+function hideLoader() {
+    document.getElementById('loader').style.display = 'none';
+}
+
 async function initGame() {
+    showLoader();
     try {
         state.targetWord = await backend.getRandomWord();
         state.wordList = await backend.getWordList();
@@ -38,6 +47,8 @@ async function initGame() {
     } catch (error) {
         console.error("Error initializing game:", error);
         showToast("Error starting game. Please try again.");
+    } finally {
+        hideLoader();
     }
 }
 
@@ -107,6 +118,7 @@ function updateBoard() {
 async function submitGuess() {
     const guess = state.boardState[state.currentRow].join('');
     
+    showLoader();
     try {
         if (!state.wordList.includes(guess)) {
             showToast("Not in word list");
@@ -138,6 +150,8 @@ async function submitGuess() {
     } catch (error) {
         console.error("Error submitting guess:", error);
         showToast("Error submitting guess. Please try again.");
+    } finally {
+        hideLoader();
     }
 }
 
