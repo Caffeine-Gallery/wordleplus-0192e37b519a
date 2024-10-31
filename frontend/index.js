@@ -10,12 +10,12 @@ let state = {
     boardState: Array(6).fill('').map(() => Array(5).fill('')),
     currentRow: 0,
     currentTile: 0,
-    gameStatus: 'IN_PROGRESS', // 'IN_PROGRESS', 'WIN', 'LOSE'
+    gameStatus: 'IN_PROGRESS',
     targetWord: '',
-    darkMode: localStorage.getItem('darkMode') === 'true'
+    darkMode: localStorage.getItem('darkMode') === 'true',
+    wordList: []
 };
 
-// Stats object
 let stats = JSON.parse(localStorage.getItem('wordleStats')) || {
     gamesPlayed: 0,
     gamesWon: 0,
@@ -25,10 +25,10 @@ let stats = JSON.parse(localStorage.getItem('wordleStats')) || {
     lastPlayDate: null
 };
 
-// Initialize game
 async function initGame() {
     try {
         state.targetWord = await backend.getRandomWord();
+        state.wordList = await backend.getWordList();
         console.log("New game started with word:", state.targetWord);
         createBoard();
         createKeyboard();
@@ -41,7 +41,6 @@ async function initGame() {
     }
 }
 
-// Create game board
 function createBoard() {
     const board = document.getElementById('game-board');
     board.innerHTML = '';
@@ -55,7 +54,6 @@ function createBoard() {
     }
 }
 
-// Create keyboard
 function createKeyboard() {
     const keyboard = document.getElementById('keyboard');
     const rows = keyboard.children;
@@ -72,7 +70,6 @@ function createKeyboard() {
     });
 }
 
-// Handle key input
 function handleInput(key) {
     if (state.gameStatus !== 'IN_PROGRESS') return;
 
@@ -96,7 +93,6 @@ function handleInput(key) {
     }
 }
 
-// Update board display
 function updateBoard() {
     const tiles = document.getElementById('game-board').children;
     state.boardState.forEach((row, i) => {
@@ -108,13 +104,11 @@ function updateBoard() {
     });
 }
 
-// Submit guess
 async function submitGuess() {
     const guess = state.boardState[state.currentRow].join('');
     
     try {
-        const isValidWord = await backend.isValidWord(guess);
-        if (!isValidWord) {
+        if (!state.wordList.includes(guess)) {
             showToast("Not in word list");
             shakeRow(state.currentRow);
             return;
@@ -147,7 +141,6 @@ async function submitGuess() {
     }
 }
 
-// Animations
 function animateTilePop(row, col) {
     const tile = document.getElementById('game-board').children[row * 5 + col];
     tile.classList.add('pop');
@@ -175,7 +168,6 @@ function animateReveal(row, result) {
     });
 }
 
-// Update keyboard colors
 function updateKeyboardColors(letter, type) {
     const keys = document.querySelectorAll('.key');
     keys.forEach(key => {
@@ -193,7 +185,6 @@ function updateKeyboardColors(letter, type) {
     });
 }
 
-// UI effects
 function showToast(message) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
@@ -218,7 +209,6 @@ function celebrateWin() {
     }
 }
 
-// Stats management
 function updateStats(won) {
     const today = new Date().toDateString();
     
@@ -271,7 +261,6 @@ function updateDistributionChart() {
     });
 }
 
-// Theme management
 function toggleTheme() {
     state.darkMode = !state.darkMode;
     localStorage.setItem('darkMode', state.darkMode);
@@ -282,7 +271,6 @@ function applyTheme() {
     document.body.classList.toggle('dark-theme', state.darkMode);
 }
 
-// Event listeners
 function setupEventListeners() {
     document.addEventListener('keydown', e => {
         handleInput(e.key.toUpperCase());
@@ -296,7 +284,6 @@ function setupEventListeners() {
 
     document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 
-    // Modal handlers
     const modals = document.querySelectorAll('.modal');
     const closeButtons = document.querySelectorAll('.close-modal');
     
@@ -321,7 +308,6 @@ function setupEventListeners() {
     document.querySelector('.share-btn').addEventListener('click', shareResults);
 }
 
-// Share results
 function shareResults() {
     const rows = state.boardState.slice(0, state.currentRow + 1).map(row => {
         return row.map((_, i) => {
@@ -344,5 +330,4 @@ function shareResults() {
     }
 }
 
-// Start game
 initGame();

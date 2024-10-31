@@ -5,6 +5,7 @@ import type { IDL } from '@dfinity/candid';
 export interface _SERVICE {
   'evaluateGuess' : ActorMethod<[string], Array<string>>,
   'getRandomWord' : ActorMethod<[], string>,
+  'getWordList' : ActorMethod<[], Array<string>>,
   'isValidWord' : ActorMethod<[string], boolean>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;

@@ -1,5 +1,6 @@
 service : {
-  evaluateGuess: (text) -> (vec text);
+  evaluateGuess: (text) -> (vec text) query;
   getRandomWord: () -> (text);
-  isValidWord: (text) -> (bool);
+  getWordList: () -> (vec text) query;
+  isValidWord: (text) -> (bool) query;
 }
