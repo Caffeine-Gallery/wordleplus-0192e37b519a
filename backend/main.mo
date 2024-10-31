@@ -15,16 +15,57 @@ import Nat8 "mo:base/Nat8";
 
 actor {
   let WORDS = [
-    "ABACK", "ABASE", "ABATE", "ABBEY", "ABBOT", "ABHOR", "ABIDE", "ABLED", "ABODE", "ABORT",
-    "ABOUT", "ABOVE", "ABUSE", "ABYSS", "ACORN", "ACRID", "ACTOR", "ACUTE", "ADAGE", "ADAPT",
-    "ADEPT", "ADMIN", "ADMIT", "ADOBE", "ADOPT", "ADORE", "ADORN", "ADULT", "AFFIX", "AFIRE",
-    "AFOOT", "AFOUL", "AFTER", "AGAIN", "AGAPE", "AGATE", "AGENT", "AGILE", "AGING", "AGLOW",
-    "AGONY", "AGREE", "AHEAD", "AIDER", "AISLE", "ALARM", "ALBUM", "ALERT", "ALGAE", "ALIBI",
-    "ALIEN", "ALIGN", "ALIKE", "ALIVE", "ALLAY", "ALLEY", "ALLOT", "ALLOW", "ALLOY", "ALOFT",
-    "ALONE", "ALONG", "ALOOF", "ALOUD", "ALPHA", "ALTAR", "ALTER", "AMASS", "AMAZE", "AMBER",
-    "AMBLE", "AMEND", "AMISS", "AMITY", "AMONG", "AMPLE", "AMPLY", "AMUSE", "ANGEL", "ANGER",
-    "ANGLE", "ANGRY", "ANGST", "ANIME", "ANKLE", "ANNEX", "ANNOY", "ANNUL", "ANODE", "ANTIC",
-    "ANVIL", "AORTA", "APART", "APHID", "APING", "APNEA", "APPLE", "APPLY", "APRON", "APTLY",
+    // A
+    "ABACK", "ABATE", "ABBEY", "ABIDE", "ABORT", "ABOUT", "ABOVE", "ABUSE", "ABYSS", "ACORN",
+    // B
+    "BACON", "BADGE", "BADLY", "BAGEL", "BAKER", "BALMY", "BANJO", "BARGE", "BASIC", "BATCH",
+    // C
+    "CABLE", "CACHE", "CAMEL", "CANDY", "CAPER", "CARRY", "CATCH", "CAUSE", "CEASE", "CHAIN",
+    // D
+    "DAILY", "DANCE", "DARED", "DECAY", "DEFER", "DEIGN", "DELVE", "DENIM", "DEPOT", "DEPTH",
+    // E
+    "EAGER", "EAGLE", "EARLY", "EARTH", "EASEL", "EBONY", "EERIE", "ELBOW", "ELDER", "ELECT",
+    // F
+    "FABLE", "FACET", "FAINT", "FALSE", "FANCY", "FARGO", "FATAL", "FEAST", "FERAL", "FETCH",
+    // G
+    "GAUGE", "GAUNT", "GAVEL", "GAZE", "GLEAM", "GLIDE", "GLOAT", "GNASH", "GRACE", "GRAND",
+    // H
+    "HABIT", "HAIRY", "HAPPY", "HARDY", "HASTE", "HAUNT", "HEART", "HEAVY", "HEDGE", "HEFTY",
+    // I
+    "IDEAL", "IDIOM", "IDLE", "IMAGE", "IMBUE", "IMPEL", "IMPLY", "INDEX", "INEPT", "INFER",
+    // J
+    "JAUNT", "JAZZY", "JELLY", "JERKY", "JETTY", "JEWEL", "JOIST", "JOLLY", "JOUST", "JUDGE",
+    // K
+    "KAYAK", "KEBAB", "KINKY", "KIOSK", "KNACK", "KNEAD", "KNELT", "KNIFE", "KNOCK", "KNOWN",
+    // L
+    "LABEL", "LABOR", "LANCE", "LANKY", "LAPSE", "LARGE", "LASER", "LATCH", "LATER", "LATHE",
+    // M
+    "MADAM", "MAGIC", "MAJOR", "MANGO", "MAPLE", "MARCH", "MARRY", "MATCH", "MAUVE", "MAXIM",
+    // N
+    "NAIVE", "NANNY", "NASAL", "NASTY", "NAVAL", "NEAR", "NEEDY", "NERVE", "NEVER", "NEWLY",
+    // O
+    "OCCUR", "OCEAN", "OFFER", "OFTEN", "OLIVE", "ONION", "ONSET", "OPERA", "OPINE", "ORBIT",
+    // P
+    "PADDY", "PAINT", "PALM", "PAPER", "PARTY", "PASTA", "PATCH", "PAUSE", "PEACE", "PEACH",
+    // Q
+    "QUACK", "QUAIL", "QUAKE", "QUALM", "QUARK", "QUART", "QUEEN", "QUEER", "QUELL", "QUERY",
+    // R
+    "RADAR", "RADIO", "RAINY", "RAISE", "RALLY", "RAMEN", "RANCH", "RANGE", "RAPID", "RATIO",
+    // S
+    "SABLE", "SADLY", "SAINT", "SALAD", "SALTY", "SALVE", "SAME", "SANDY", "SANE", "SATIN",
+    // T
+    "TABLE", "TACIT", "TAKEN", "TALLY", "TALON", "TANGO", "TANGY", "TAPER", "TAPIR", "TARDY",
+    // U
+    "ULCER", "ULTRA", "UMBRA", "UNCLE", "UNCUT", "UNDER", "UNDUE", "UNFED", "UNIFY", "UNION",
+    // V
+    "VAGUE", "VAIN", "VALID", "VALOR", "VALUE", "VALVE", "VAPID", "VAULT", "VAUNT", "VEGAN",
+    // W
+    "WACKY", "WAFER", "WAGER", "WAGON", "WAIST", "WAIVE", "WALTZ", "WARTY", "WASTE", "WATCH",
+    // X
+    "XENON", "XEROX",
+    // Y
+    "YACHT", "YEARN", "YEAST", "YIELD", "YOUNG", "YOUTH", "YUMMY",
+    // Z
     "ZEBRA", "ZESTY", "ZONAL"
   ];
 
