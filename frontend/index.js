@@ -12,8 +12,7 @@ let state = {
     currentTile: 0,
     gameStatus: 'IN_PROGRESS',
     targetWord: '',
-    darkMode: localStorage.getItem('darkMode') === 'true',
-    wordList: []
+    darkMode: localStorage.getItem('darkMode') === 'true'
 };
 
 let stats = JSON.parse(localStorage.getItem('wordleStats')) || {
@@ -37,7 +36,6 @@ async function initGame() {
     showLoader();
     try {
         state.targetWord = await backend.getRandomWord();
-        state.wordList = await backend.getWordList();
         console.log("New game started");
         createBoard();
         createKeyboard();
@@ -120,15 +118,15 @@ async function submitGuess() {
     
     showLoader();
     try {
-        const isValidWord = await backend.isValidWord(guess);
-        if (!isValidWord) {
-            showToast("Not in word list");
+        const result = await backend.evaluateGuess(guess);
+        console.log("Guess evaluation result:", result);
+
+        if (result[0] === 'invalid') {
+            showToast("Invalid word");
             shakeRow(state.currentRow);
             return;
         }
 
-        const result = await backend.evaluateGuess(guess);
-        console.log("Guess evaluation result:", result);
         animateReveal(state.currentRow, result);
 
         if (result.every(r => r === 'correct')) {
