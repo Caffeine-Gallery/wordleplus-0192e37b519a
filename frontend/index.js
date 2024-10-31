@@ -55,11 +55,14 @@ function createBoard() {
     board.innerHTML = '';
     
     for (let i = 0; i < 6; i++) {
+        const row = document.createElement('div');
+        row.className = 'row';
         for (let j = 0; j < 5; j++) {
             const tile = document.createElement('div');
-            tile.classList.add('tile');
-            board.appendChild(tile);
+            tile.className = 'tile';
+            row.appendChild(tile);
         }
+        board.appendChild(row);
     }
 }
 
@@ -72,8 +75,12 @@ function createKeyboard() {
         row.forEach(key => {
             const keyButton = document.createElement('button');
             keyButton.textContent = key;
-            keyButton.classList.add('key');
-            if (key === 'ENTER' || key === '←') keyButton.classList.add('wide');
+            keyButton.className = 'key';
+            if (key === 'ENTER') keyButton.classList.add('one-and-a-half');
+            if (key === '←') {
+                keyButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="var(--color-tone-1)" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"></path></svg>';
+                keyButton.classList.add('one-and-a-half');
+            }
             rows[i].appendChild(keyButton);
         });
     });
@@ -103,12 +110,12 @@ function handleInput(key) {
 }
 
 function updateBoard() {
-    const tiles = document.getElementById('game-board').children;
+    const rows = document.getElementById('game-board').children;
     state.boardState.forEach((row, i) => {
+        const tiles = rows[i].children;
         row.forEach((letter, j) => {
-            const tile = tiles[i * 5 + j];
-            tile.textContent = letter;
-            tile.classList.toggle('filled', letter !== '');
+            tiles[j].textContent = letter;
+            tiles[j].classList.toggle('filled', letter !== '');
         });
     });
 }
@@ -155,27 +162,23 @@ async function submitGuess() {
 }
 
 function animateTilePop(row, col) {
-    const tile = document.getElementById('game-board').children[row * 5 + col];
+    const tile = document.getElementById('game-board').children[row].children[col];
     tile.classList.add('pop');
     setTimeout(() => tile.classList.remove('pop'), 100);
 }
 
 function animateReveal(row, result) {
-    const tiles = document.getElementById('game-board').children;
+    const tiles = document.getElementById('game-board').children[row].children;
     const keys = document.querySelectorAll('.key');
     
     result.forEach((type, i) => {
         setTimeout(() => {
-            const tile = tiles[row * 5 + i];
-            const letter = state.boardState[row][i];
-            
-            tile.classList.add('flip-in');
+            tiles[i].classList.add('flip-in');
             setTimeout(() => {
-                tile.classList.remove('correct', 'present', 'absent');
-                tile.classList.add(type);
-                updateKeyboardColors(letter, type);
-                tile.classList.remove('flip-in');
-                tile.classList.add('flip-out');
+                tiles[i].classList.add(type);
+                updateKeyboardColors(state.boardState[row][i], type);
+                tiles[i].classList.remove('flip-in');
+                tiles[i].classList.add('flip-out');
             }, 250);
         }, i * 250);
     });
@@ -185,15 +188,8 @@ function updateKeyboardColors(letter, type) {
     const keys = document.querySelectorAll('.key');
     keys.forEach(key => {
         if (key.textContent === letter) {
-            if (type === 'correct') {
-                key.classList.remove('present', 'absent');
-                key.classList.add('correct');
-            } else if (type === 'present' && !key.classList.contains('correct')) {
-                key.classList.remove('absent');
-                key.classList.add('present');
-            } else if (type === 'absent' && !key.classList.contains('correct') && !key.classList.contains('present')) {
-                key.classList.add('absent');
-            }
+            key.classList.remove('correct', 'present', 'absent');
+            key.classList.add(type);
         }
     });
 }
@@ -206,18 +202,16 @@ function showToast(message) {
 }
 
 function shakeRow(row) {
-    const tiles = document.getElementById('game-board').children;
-    for (let i = 0; i < 5; i++) {
-        tiles[row * 5 + i].classList.add('shake');
-        setTimeout(() => tiles[row * 5 + i].classList.remove('shake'), 500);
-    }
+    const rowElement = document.getElementById('game-board').children[row];
+    rowElement.classList.add('shake');
+    setTimeout(() => rowElement.classList.remove('shake'), 500);
 }
 
 function celebrateWin() {
-    const tiles = document.getElementById('game-board').children;
+    const tiles = document.getElementById('game-board').children[state.currentRow].children;
     for (let i = 0; i < 5; i++) {
         setTimeout(() => {
-            tiles[state.currentRow * 5 + i].classList.add('win-animation');
+            tiles[i].classList.add('win-animation');
         }, i * 100);
     }
 }
@@ -295,27 +289,30 @@ function setupEventListeners() {
         }
     });
 
-    document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+    document.getElementById('settingsBtn').addEventListener('click', toggleTheme);
 
     const modals = document.querySelectorAll('.modal');
     const closeButtons = document.querySelectorAll('.close-modal');
     
     document.getElementById('statsBtn').addEventListener('click', () => {
         document.getElementById('statsModal').style.display = 'block';
-        setTimeout(() => document.getElementById('statsModal').classList.add('visible'), 10);
     });
 
     document.getElementById('helpBtn').addEventListener('click', () => {
         document.getElementById('helpModal').style.display = 'block';
-        setTimeout(() => document.getElementById('helpModal').classList.add('visible'), 10);
     });
 
     closeButtons.forEach(button => {
         button.addEventListener('click', () => {
             const modal = button.closest('.modal');
-            modal.classList.remove('visible');
-            setTimeout(() => modal.style.display = 'none', 300);
+            modal.style.display = 'none';
         });
+    });
+
+    window.addEventListener('click', e => {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
     });
 
     document.querySelector('.share-btn').addEventListener('click', shareResults);
@@ -324,7 +321,7 @@ function setupEventListeners() {
 function shareResults() {
     const rows = state.boardState.slice(0, state.currentRow + 1).map(row => {
         return row.map((_, i) => {
-            const tile = document.getElementById('game-board').children[state.currentRow * 5 + i];
+            const tile = document.getElementById('game-board').children[state.currentRow].children[i];
             if (tile.classList.contains('correct')) return '🟩';
             if (tile.classList.contains('present')) return '🟨';
             if (tile.classList.contains('absent')) return '⬛';
