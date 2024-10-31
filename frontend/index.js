@@ -38,7 +38,7 @@ async function initGame() {
     try {
         state.targetWord = await backend.getRandomWord();
         state.wordList = await backend.getWordList();
-        console.log("New game started with word:", state.targetWord);
+        console.log("New game started");
         createBoard();
         createKeyboard();
         setupEventListeners();
@@ -120,7 +120,8 @@ async function submitGuess() {
     
     showLoader();
     try {
-        if (!state.wordList.includes(guess)) {
+        const isValidWord = await backend.isValidWord(guess);
+        if (!isValidWord) {
             showToast("Not in word list");
             shakeRow(state.currentRow);
             return;
@@ -130,7 +131,7 @@ async function submitGuess() {
         console.log("Guess evaluation result:", result);
         animateReveal(state.currentRow, result);
 
-        if (guess === state.targetWord) {
+        if (result.every(r => r === 'correct')) {
             setTimeout(() => {
                 state.gameStatus = 'WIN';
                 showToast(['Genius!', 'Magnificent!', 'Impressive!', 'Splendid!', 'Great!', 'Phew!'][state.currentRow]);

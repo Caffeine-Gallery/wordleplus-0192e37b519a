@@ -1,3 +1,4 @@
+import Blob "mo:base/Blob";
 import Bool "mo:base/Bool";
 import List "mo:base/List";
 
@@ -8,16 +9,23 @@ import Random "mo:base/Random";
 import Text "mo:base/Text";
 import Char "mo:base/Char";
 import Debug "mo:base/Debug";
+import Buffer "mo:base/Buffer";
+import Nat "mo:base/Nat";
+import Nat8 "mo:base/Nat8";
 
 actor {
   let WORDS = [
-    "ABOUT", "ABOVE", "ABUSE", "ACTOR", "ACUTE", "ADMIT", "ADOPT", "ADULT", "AFTER", "AGAIN",
-    "AGENT", "AGREE", "AHEAD", "ALARM", "ALBUM", "ALERT", "ALIKE", "ALIVE", "ALLOW", "ALONE",
-    "ALONG", "ALTER", "AMONG", "ANGER", "ANGLE", "ANGRY", "APART", "APPLE", "APPLY", "ARENA",
-    "ARGUE", "ARISE", "ARRAY", "ASIDE", "ASSET", "AUDIO", "AUDIT", "AVOID", "AWARD", "AWARE",
-    "BADLY", "BAKER", "BASES", "BASIC", "BASIS", "BEACH", "BEGAN", "BEGIN", "BEGUN", "BEING",
-    "BELOW", "BENCH", "BILLY", "BIRTH", "BLACK", "BLAME", "BLIND", "BLOCK", "BLOOD", "BOARD",
-    "BOOST", "BOOTH", "BOUND", "BRAIN", "BRAND", "BREAD", "BREAK", "BREED", "BRIEF"
+    "ABACK", "ABASE", "ABATE", "ABBEY", "ABBOT", "ABHOR", "ABIDE", "ABLED", "ABODE", "ABORT",
+    "ABOUT", "ABOVE", "ABUSE", "ABYSS", "ACORN", "ACRID", "ACTOR", "ACUTE", "ADAGE", "ADAPT",
+    "ADEPT", "ADMIN", "ADMIT", "ADOBE", "ADOPT", "ADORE", "ADORN", "ADULT", "AFFIX", "AFIRE",
+    "AFOOT", "AFOUL", "AFTER", "AGAIN", "AGAPE", "AGATE", "AGENT", "AGILE", "AGING", "AGLOW",
+    "AGONY", "AGREE", "AHEAD", "AIDER", "AISLE", "ALARM", "ALBUM", "ALERT", "ALGAE", "ALIBI",
+    "ALIEN", "ALIGN", "ALIKE", "ALIVE", "ALLAY", "ALLEY", "ALLOT", "ALLOW", "ALLOY", "ALOFT",
+    "ALONE", "ALONG", "ALOOF", "ALOUD", "ALPHA", "ALTAR", "ALTER", "AMASS", "AMAZE", "AMBER",
+    "AMBLE", "AMEND", "AMISS", "AMITY", "AMONG", "AMPLE", "AMPLY", "AMUSE", "ANGEL", "ANGER",
+    "ANGLE", "ANGRY", "ANGST", "ANIME", "ANKLE", "ANNEX", "ANNOY", "ANNUL", "ANODE", "ANTIC",
+    "ANVIL", "AORTA", "APART", "APHID", "APING", "APNEA", "APPLE", "APPLY", "APRON", "APTLY",
+    "ZEBRA", "ZESTY", "ZONAL"
   ];
 
   stable var currentWord : Text = "";
@@ -66,7 +74,18 @@ actor {
     Iter.toArray(result.vals())
   };
 
-  public query func getWordList() : async [Text] {
-    WORDS
+  public func getWordList() : async [Text] {
+    let buffer = Buffer.Buffer<Text>(100);
+    let randomBlob = await Random.blob();
+    let randomBytes = Random.Finite(randomBlob);
+    for (_ in Iter.range(0, 99)) {
+      let randomByte = switch (randomBytes.byte()) {
+        case null 0;
+        case (?b) Nat8.toNat(b);
+      };
+      let randomIndex = randomByte % WORDS.size();
+      buffer.add(WORDS[randomIndex]);
+    };
+    Buffer.toArray(buffer)
   };
 };
